@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 1.0.1
+ * @version 1.0.2
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -95,12 +95,12 @@ if (nativeSome && properlyBoxesNonStrict && properlyBoxesStrict) {
  * This method tests whether some element in the array passes the test
  * implemented by the provided function.
  *
- * @param {array} array The array to iterate over.
- * @param {Function} callBack Function to test for each element.
- * @param {*} [thisArg] Value to use as this when executing callback.
+ * @param {array} array - The array to iterate over.
+ * @param {Function} callBack - Function to test for each element.
+ * @param {*} [thisArg] - Value to use as this when executing callback.
  * @throws {TypeError} If array is null or undefined.
  * @throws {TypeError} If callBack is not a function.
- * @return {boolean} `true` if the callback function returns a truthy value for
+ * @returns {boolean} `true` if the callback function returns a truthy value for
  *  any array element; otherwise, `false`.
  * @example
  * var some = require('array-some-x');
