@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 1.0.2
+ * @version 1.0.3
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -9,41 +9,35 @@
 
 'use strict';
 
-// Check failure of by-index access of string characters (IE < 9)
-// and failure of `0 in boxedString` (Rhino)
-var boxedString = Object('a');
-var splitString = boxedString[0] !== 'a' || (0 in boxedString) === false;
+var tests = {
+  // Check node 0.6.21 bug where third parameter is not boxed
+  properlyBoxesNonStrict: true,
+  properlyBoxesStrict: true
+};
 
-var isStrict = (function () {
-  // eslint-disable-next-line no-invalid-this
-  return Boolean(this) === false;
-}());
-
-// Check node 0.6.21 bug where third parameter is not boxed
-var properlyBoxesNonStrict = true;
-var properlyBoxesStrict = true;
 var nativeSome = Array.prototype.some;
 if (nativeSome) {
   try {
-    if (isStrict) {
-      nativeSome.call([1], function () {
-        // eslint-disable-next-line no-invalid-this
-        properlyBoxesStrict = typeof this === 'string';
-      }, 'x');
-    } else {
-      nativeSome.call('foo', function (_, __, context) {
-        if (Boolean(context) === false || typeof context !== 'object') {
-          properlyBoxesNonStrict = false;
-        }
-      });
-    }
+    nativeSome.call([1], function () {
+      // eslint-disable-next-line no-invalid-this
+      tests.properlyBoxesStrict = typeof this === 'string';
+    }, 'x');
+
+    var fn = [
+      'return nativeSome.call("foo", function (_, __, context) {',
+      'if (Boolean(context) === false || typeof context !== "object") {',
+      'tests.properlyBoxesNonStrict = false;}});'
+    ].join('');
+
+    // eslint-disable-next-line no-new-func
+    Function('nativeSome', 'tests', fn)(nativeSome, tests);
   } catch (e) {
     nativeSome = null;
   }
 }
 
 var $some;
-if (nativeSome && properlyBoxesNonStrict && properlyBoxesStrict) {
+if (nativeSome && tests.properlyBoxesNonStrict && tests.properlyBoxesStrict) {
   $some = function some(array, callBack /* , thisArg */) {
     var args = [callBack];
     if (arguments.length > 2) {
@@ -61,6 +55,7 @@ if (nativeSome && properlyBoxesNonStrict && properlyBoxesStrict) {
   var isString = require('is-string');
   var toLength = require('to-length-x');
   var isUndefined = require('validate.io-undefined');
+  var splitString = require('has-boxed-string-x') === false;
   $some = function some(array, callBack /* , thisArg */) {
     var object = toObject(array);
     // If no callback function or if callback is not a callable function
