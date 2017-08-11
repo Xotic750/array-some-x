@@ -23,7 +23,7 @@
 ## array-some-x
 Tests whether some element passes the provided function.
 
-**Version**: 1.0.3  
+**Version**: 1.1.0  
 **Author**: Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
