@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 1.1.0
+ * @version 1.3.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -8,6 +8,9 @@
  */
 
 'use strict';
+
+var toObject = require('to-object-x');
+var assertIsFunction = require('assert-is-function-x');
 
 var tests = {
   // Check node 0.6.21 bug where third parameter is not boxed
@@ -39,19 +42,18 @@ if (nativeSome) {
 var $some;
 if (nativeSome && tests.properlyBoxesNonStrict && tests.properlyBoxesStrict) {
   $some = function some(array, callBack /* , thisArg */) {
-    var args = [callBack];
+    var object = toObject(array);
+    var args = [assertIsFunction(callBack)];
     if (arguments.length > 2) {
       args.push(arguments[2]);
     }
 
-    return nativeSome.apply(array, args);
+    return nativeSome.apply(object, args);
   };
 } else {
   // ES5 15.4.4.17
   // http://es5.github.com/#x15.4.4.17
   // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
-  var toObject = require('to-object-x');
-  var assertIsFunction = require('assert-is-function-x');
   var isString = require('is-string');
   var toLength = require('to-length-x');
   var isUndefined = require('validate.io-undefined');
