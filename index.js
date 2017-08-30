@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 1.3.0
+ * @version 2.0.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -45,7 +45,7 @@ if (nativeSome && tests.properlyBoxesNonStrict && tests.properlyBoxesStrict) {
     var object = toObject(array);
     var args = [assertIsFunction(callBack)];
     if (arguments.length > 2) {
-      args.push(arguments[2]);
+      args[1] = arguments[2];
     }
 
     return nativeSome.apply(object, args);
