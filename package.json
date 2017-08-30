@@ -29,8 +29,10 @@
     "url": "https://github.com/Xotic750/array-some-x/issues"
   },
   "dependencies": {
+    "array-slice-x": "^3.0.0",
     "assert-is-function-x": "^2.0.0",
     "has-boxed-string-x": "^1.0.0",
+    "is-arguments": "^1.0.2",
     "is-string": "^1.0.4",
     "to-length-x": "^2.0.0",
     "to-object-x": "^1.4.0",
