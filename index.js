@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 2.0.0
+ * @version 2.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -111,24 +111,21 @@ if (nativeSome) {
   // http://es5.github.com/#x15.4.4.17
   // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
   var splitString = require('has-boxed-string-x') === false;
-  var isString = splitString && require('is-string');
-  var hasArgumentsLengthBug = argObj.length !== 1;
-  var isArguments = hasArgumentsLengthBug && require('is-arguments');
+  var isString;
+  var slice;
+  if (splitString) {
+    isString = require('is-string');
+    slice = require('array-slice-x');
+  }
+
   var toLength = require('to-length-x');
-  var slice = require('array-slice-x');
   var isUndefined = require('validate.io-undefined');
 
   $some = function some(array, callBack /* , thisArg */) {
     var object = toObject(array);
     // If no callback function or if callback is not a callable function
     assertIsFunction(callBack);
-    var iterable;
-    if ((isString && isString(object)) || (isArguments && isArguments(object))) {
-      iterable = slice(object);
-    } else {
-      iterable = object;
-    }
-
+    var iterable = splitString && isString(object) ? slice(object) : object;
     var length = toLength(iterable.length);
     var thisArg;
     if (arguments.length > 2) {
