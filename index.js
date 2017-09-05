@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 2.0.0
+ * @version 2.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -9,123 +9,130 @@
 
 'use strict';
 
-var toObject = require('to-object-x');
-var assertIsFunction = require('assert-is-function-x');
-var documentElement = typeof document !== 'undefined' && document.documentElement;
-
-var argObj = (function () {
-  return arguments;
-}(1));
-
+var attempt = require('attempt-x');
 var nativeSome = typeof Array.prototype.some === 'function' && Array.prototype.some;
+
+var isWorking;
 if (nativeSome) {
-  try {
-    var worksWithStrings;
-    nativeSome.call('abc', function () {
-      worksWithStrings = true;
-      return worksWithStrings;
+  var spy = 0;
+  var res = attempt.call([1, 2], nativeSome, function (item) {
+    spy += item;
+    return false;
+  });
+
+  isWorking = res.threw === false && res.value === false && spy === 3;
+
+  if (isWorking) {
+    spy = '';
+    res = attempt.call(Object('abc'), nativeSome, function (item, index) {
+      spy += item;
+      return index === 1;
+    });
+  }
+
+  isWorking = res.threw === false && res.value === true && spy === 'ab';
+
+  if (isWorking) {
+    spy = 0;
+    res = attempt.call((function () {
+      return arguments;
+    }(1, 2, 3)), nativeSome, function (item, index) {
+      spy += item;
+      return index === 2;
     });
 
-    if (worksWithStrings !== true) {
-      throw new Error('failed string');
-    }
+    isWorking = res.threw === false && res.value === true && spy === 6;
+  }
 
-    var worksWithArguments;
-    nativeSome.call(argObj, function () {
-      worksWithArguments = true;
-      return worksWithStrings;
+  if (isWorking) {
+    spy = 0;
+    res = attempt.call({
+      0: 1,
+      1: 2,
+      3: 3,
+      4: 4,
+      length: 4
+    }, nativeSome, function (item) {
+      spy += item;
+      return false;
     });
 
-    if (worksWithArguments !== true) {
-      throw new Error('failed arguments');
-    }
+    isWorking = res.threw === false && res.value === false && spy === 6;
+  }
 
-    if (documentElement) {
-      var fragment = document.createDocumentFragment();
-      var div = document.createElement('div');
+  if (isWorking) {
+    var doc = typeof document !== 'undefined' && document;
+    if (doc) {
+      spy = null;
+      var fragment = doc.createDocumentFragment();
+      var div = doc.createElement('div');
       fragment.appendChild(div);
-
-      var worksWithDOMElements;
-      nativeSome.call(fragment.childNodes, function () {
-        worksWithDOMElements = true;
-        return worksWithDOMElements;
+      res = attempt.call(fragment.childNodes, nativeSome, function (item) {
+        spy = item;
+        return item;
       });
 
-      if (worksWithDOMElements !== true) {
-        throw new Error('failed documentElement');
-      }
+      isWorking = res.threw === false && res.value === true && spy === div;
     }
+  }
 
-    var tests = {
-      // Check node 0.6.21 bug where third parameter is not boxed
-      properlyBoxesNonStrict: true,
-      properlyBoxesStrict: true
-    };
-
+  if (isWorking) {
     var isStrict = (function () {
       // eslint-disable-next-line no-invalid-this
       return Boolean(this) === false;
     }());
 
     if (isStrict) {
-      nativeSome.call([1], function () {
-      // eslint-disable-next-line no-invalid-this
-        tests.properlyBoxesStrict = typeof this === 'string';
+      spy = null;
+      res = attempt.call([1], nativeSome, function () {
+        // eslint-disable-next-line no-invalid-this
+        spy = typeof this === 'string';
       }, 'x');
 
-      if (tests.properlyBoxesStrict !== true) {
-        throw new Error('failed properlyBoxesStrict');
-      }
+      isWorking = res.threw === false && res.value === false && spy === true;
     }
+  }
 
+  if (isWorking) {
+    spy = {};
     var fn = [
       'return nativeSome.call("foo", function (_, __, context) {',
       'if (Boolean(context) === false || typeof context !== "object") {',
-      'tests.properlyBoxesNonStrict = false;}});'
+      'spy.value = true;}});'
     ].join('');
 
     // eslint-disable-next-line no-new-func
-    Function('nativeSome', 'tests', fn)(nativeSome, tests);
+    res = attempt(Function('nativeSome', 'spy', fn), nativeSome, spy);
 
-    if (tests.properlyBoxesNonStrict !== true) {
-      throw new Error('failed properlyBoxesNonStrict');
-    }
-  } catch (ignore) {
-    nativeSome = null;
+    isWorking = res.threw === false && res.value === false && spy.value !== true;
   }
 }
 
 var $some;
 if (nativeSome) {
   $some = function some(array, callBack /* , thisArg */) {
-    var object = toObject(array);
-    var args = [assertIsFunction(callBack)];
+    var args = [callBack];
     if (arguments.length > 2) {
       args[1] = arguments[2];
     }
 
-    return nativeSome.apply(object, args);
+    return nativeSome.apply(array, args);
   };
 } else {
   // ES5 15.4.4.17
   // http://es5.github.com/#x15.4.4.17
   // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
-  var splitString = require('has-boxed-string-x') === false;
-  var isString;
-  var slice;
-  if (splitString) {
-    isString = require('is-string');
-    slice = require('array-slice-x');
-  }
-
+  var splitIfBoxedBug = require('split-if-boxed-bug-x');
   var toLength = require('to-length-x');
   var isUndefined = require('validate.io-undefined');
+  var toObject = require('to-object-x');
+  var assertIsFunction = require('assert-is-function-x');
 
   $some = function some(array, callBack /* , thisArg */) {
     var object = toObject(array);
     // If no callback function or if callback is not a callable function
     assertIsFunction(callBack);
-    var iterable = splitString && isString(object) ? slice(object) : object;
+    var iterable = splitIfBoxedBug(object);
     var length = toLength(iterable.length);
     var thisArg;
     if (arguments.length > 2) {
