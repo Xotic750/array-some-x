@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 2.1.0
+ * @version 2.2.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -139,16 +139,11 @@ if (nativeSome) {
       thisArg = arguments[2];
     }
 
+    var noThis = isUndefined(thisArg);
     for (var i = 0; i < length; i += 1) {
       if (i in iterable) {
-        var result;
-        if (isUndefined(thisArg)) {
-          result = callBack(iterable[i], i, object);
-        } else {
-          result = callBack.call(thisArg, iterable[i], i, object);
-        }
-
-        if (result) {
+        var item = iterable[i];
+        if (noThis ? callBack(item, i, object) : callBack.call(thisArg, item, i, object)) {
           return true;
         }
       }
