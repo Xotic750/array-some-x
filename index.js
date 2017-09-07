@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 2.2.0
+ * @version 2.3.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -28,9 +28,9 @@ if (nativeSome) {
       spy += item;
       return index === 1;
     });
-  }
 
-  isWorking = res.threw === false && res.value === true && spy === 'ab';
+    isWorking = res.threw === false && res.value === true && spy === 'ab';
+  }
 
   if (isWorking) {
     spy = 0;
