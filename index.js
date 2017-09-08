@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 2.3.0
+ * @version 2.4.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -9,11 +9,11 @@
 
 'use strict';
 
-var attempt = require('attempt-x');
 var nativeSome = typeof Array.prototype.some === 'function' && Array.prototype.some;
 
 var isWorking;
 if (nativeSome) {
+  var attempt = require('attempt-x');
   var spy = 0;
   var res = attempt.call([1, 2], nativeSome, function (item) {
     spy += item;

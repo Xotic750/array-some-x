@@ -21,8 +21,7 @@ if (typeof module === 'object' && module.exports) {
   some = returnExports;
 }
 
-var documentElement = typeof document !== 'undefined' && document.documentElement;
-var itHasDocumentElement = documentElement ? it : xit;
+var itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
 // IE 6 - 8 have a bug where this returns false.
 var canDistinguish = 0 in [void 0];
@@ -229,7 +228,7 @@ describe('some', function () {
     expect(callback).toHaveBeenCalledWith('1', 0, string);
   });
 
-  itHasDocumentElement('should work wih DOM elements', function () {
+  itHasDoc('should work wih DOM elements', function () {
     var fragment = document.createDocumentFragment();
     var div = document.createElement('div');
     fragment.appendChild(div);
