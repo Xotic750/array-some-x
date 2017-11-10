@@ -1,6 +1,6 @@
 /**
  * @file Tests whether some element passes the provided function.
- * @version 2.4.0
+ * @version 2.5.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -9,7 +9,10 @@
 
 'use strict';
 
-var nativeSome = typeof Array.prototype.some === 'function' && Array.prototype.some;
+var cachedCtrs = require('cached-constructors-x');
+var ArrayCtr = cachedCtrs.Array;
+var castObject = cachedCtrs.Object;
+var nativeSome = typeof ArrayCtr.prototype.some === 'function' && ArrayCtr.prototype.some;
 
 var isWorking;
 if (nativeSome) {
@@ -24,7 +27,7 @@ if (nativeSome) {
 
   if (isWorking) {
     spy = '';
-    res = attempt.call(Object('abc'), nativeSome, function (item, index) {
+    res = attempt.call(castObject('abc'), nativeSome, function (item, index) {
       spy += item;
       return index === 1;
     });
@@ -123,7 +126,7 @@ if (nativeSome) {
   // http://es5.github.com/#x15.4.4.17
   // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
   var splitIfBoxedBug = require('split-if-boxed-bug-x');
-  var toLength = require('to-length-x');
+  var toLength = require('to-length-x').toLength2018;
   var isUndefined = require('validate.io-undefined');
   var toObject = require('to-object-x');
   var assertIsFunction = require('assert-is-function-x');
