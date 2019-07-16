@@ -7,7 +7,7 @@
  * @module Array-some-x.
  */
 
-const cachedCtrs = require('cached-constructors-x');
+import cachedCtrs from 'cached-constructors-x';
 
 const ArrayCtr = cachedCtrs.Array;
 const castObject = cachedCtrs.Object;
@@ -200,4 +200,4 @@ if (nativeSome) {
  * some([2, 5, 8, 1, 4], isBiggerThan10);  // false
  * some([12, 5, 8, 1, 4], isBiggerThan10); // true
  */
-module.exports = $some;
+export default $some;

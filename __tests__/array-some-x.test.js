@@ -67,24 +67,27 @@ describe('some', function() {
   });
 
   it('is a function', function() {
+    expect.assertions(1);
     expect(typeof some).toBe('function');
   });
 
   it('should throw when array is null or undefined', function() {
+    expect.assertions(1);
     expect(function() {
       some();
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(function() {
       some(void 0);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(function() {
       some(null);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('should pass the correct values along to the callback', function() {
+    expect.assertions(1);
     const callback = jasmine.createSpy('callback');
     const array = ['1'];
     some(array, callback);
@@ -92,6 +95,7 @@ describe('some', function() {
   });
 
   it('should not affect elements added to the array after it has begun', function() {
+    expect.assertions(1);
     const arr = [1, 2, 3];
 
     let i = 0;
@@ -108,6 +112,7 @@ describe('some', function() {
   });
 
   it('should set the right context when given none', function() {
+    expect.assertions(1);
     let context;
     some([1], function() {
       // eslint-disable-next-line no-invalid-this
@@ -123,11 +128,13 @@ describe('some', function() {
   });
 
   it('should return false if it runs to the end', function() {
+    expect.assertions(1);
     actual = some(testSubject, function() {});
     expect(actual).toBe(false);
   });
 
   it('should return true if it is stopped somewhere', function() {
+    expect.assertions(1);
     actual = some(testSubject, function() {
       return true;
     });
@@ -136,6 +143,7 @@ describe('some', function() {
   });
 
   it('should return false if there are no elements', function() {
+    expect.assertions(1);
     actual = some([], function() {
       return true;
     });
@@ -144,6 +152,7 @@ describe('some', function() {
   });
 
   it('should stop after 3 elements', function() {
+    expect.assertions(1);
     some(testSubject, function(obj, index) {
       actual[index] = obj;
       numberOfRuns += 1;
@@ -155,6 +164,7 @@ describe('some', function() {
   });
 
   it('should stop after 3 elements using a context', function() {
+    expect.assertions(1);
     const o = {a: actual};
     some(
       testSubject,
@@ -172,6 +182,7 @@ describe('some', function() {
   });
 
   it('should stop after 3 elements in an array-like object', function() {
+    expect.assertions(1);
     const ts = createArrayLike(testSubject);
     some(ts, function(obj, index) {
       actual[index] = obj;
@@ -184,6 +195,7 @@ describe('some', function() {
   });
 
   it('should stop after 3 elements in an array-like object using a context', function() {
+    expect.assertions(1);
     const ts = createArrayLike(testSubject);
     const o = {a: actual};
     some(
@@ -202,6 +214,7 @@ describe('some', function() {
   });
 
   it('should have a boxed object as list argument of callback', function() {
+    expect.assertions(1);
     let listArg;
     some('foo', function(item, index, list) {
       listArg = list;
@@ -212,6 +225,7 @@ describe('some', function() {
   });
 
   it('should work with arguments', function() {
+    expect.assertions(1);
     const argObj = (function() {
       return arguments;
     })('1');
@@ -222,6 +236,7 @@ describe('some', function() {
   });
 
   it('should work with strings', function() {
+    expect.assertions(1);
     const callback = jasmine.createSpy('callback');
     const string = '1';
     some(string, callback);
