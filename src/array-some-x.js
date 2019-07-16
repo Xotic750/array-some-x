@@ -86,7 +86,7 @@ if (nativeSome) {
 
   if (isWorking) {
     const isStrict = (function() {
-      // eslint-disable-next-line no-invalid-this
+      // eslint-disable-next-line babel/no-invalid-this
       return Boolean(this) === false;
     })();
 
@@ -96,7 +96,7 @@ if (nativeSome) {
         [1],
         nativeSome,
         function() {
-          // eslint-disable-next-line no-invalid-this
+          // eslint-disable-next-line babel/no-invalid-this
           spy = typeof this === 'string';
         },
         'x',
