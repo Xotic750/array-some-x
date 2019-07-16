@@ -1,4 +1,4 @@
-let some;
+import some from '../src/array-some-x';
 
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
@@ -49,7 +49,7 @@ describe('some', function() {
   });
 
   it('should throw when array is null or undefined', function() {
-    expect.assertions(1);
+    expect.assertions(3);
     expect(function() {
       some();
     }).toThrowErrorMatchingSnapshot();
@@ -65,14 +65,14 @@ describe('some', function() {
 
   it('should pass the correct values along to the callback', function() {
     expect.assertions(1);
-    const callback = jasmine.createSpy('callback');
+    const callback = jest.fn();
     const array = ['1'];
     some(array, callback);
     expect(callback).toHaveBeenCalledWith('1', 0, array);
   });
 
   it('should not affect elements added to the array after it has begun', function() {
-    expect.assertions(1);
+    expect.assertions(2);
     const arr = [1, 2, 3];
 
     let i = 0;
@@ -90,15 +90,15 @@ describe('some', function() {
 
   it('should set the right context when given none', function() {
     expect.assertions(1);
-    let context;
+    let context = void 0;
     some([1], function() {
-      // eslint-disable-next-line no-invalid-this
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     });
 
     expect(context).toBe(
       function() {
-        // eslint-disable-next-line no-invalid-this
+        /* eslint-disable-next-line babel/no-invalid-this */
         return this;
       }.call(),
     );
@@ -146,7 +146,7 @@ describe('some', function() {
     some(
       testSubject,
       function(obj, index) {
-        // eslint-disable-next-line no-invalid-this
+        /* eslint-disable-next-line babel/no-invalid-this */
         this.a[index] = obj;
         numberOfRuns += 1;
 
@@ -178,7 +178,7 @@ describe('some', function() {
     some(
       ts,
       function(obj, index) {
-        // eslint-disable-next-line no-invalid-this
+        /* eslint-disable-next-line babel/no-invalid-this */
         this.a[index] = obj;
         numberOfRuns += 1;
 
@@ -191,8 +191,8 @@ describe('some', function() {
   });
 
   it('should have a boxed object as list argument of callback', function() {
-    expect.assertions(1);
-    let listArg;
+    expect.assertions(2);
+    let listArg = void 0;
     some('foo', function(item, index, list) {
       listArg = list;
     });
@@ -207,14 +207,14 @@ describe('some', function() {
       return arguments;
     })('1');
 
-    const callback = jasmine.createSpy('callback');
+    const callback = jest.fn();
     some(argObj, callback);
     expect(callback).toHaveBeenCalledWith('1', 0, argObj);
   });
 
   it('should work with strings', function() {
     expect.assertions(1);
-    const callback = jasmine.createSpy('callback');
+    const callback = jest.fn();
     const string = '1';
     some(string, callback);
     expect(callback).toHaveBeenCalledWith('1', 0, string);
@@ -224,7 +224,7 @@ describe('some', function() {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     fragment.appendChild(div);
-    const callback = jasmine.createSpy('callback');
+    const callback = jest.fn();
     some(fragment.childNodes, callback);
     expect(callback).toHaveBeenCalledWith(div, 0, fragment.childNodes);
   });
