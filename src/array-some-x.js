@@ -1,12 +1,3 @@
-/**
- * @file Tests whether some element passes the provided function.
- * @version 2.5.0.
- * @author Xotic750 <Xotic750@gmail.com>.
- * @copyright  Xotic750.
- * @license {@link <https://opensource.org/licenses/MIT> MIT}
- * @module Array-some-x.
- */
-
 import cachedCtrs from 'cached-constructors-x';
 
 const ArrayCtr = cachedCtrs.Array;
@@ -190,14 +181,5 @@ if (nativeSome) {
  * @throws {TypeError} If callBack is not a function.
  * @returns {boolean} `true` if the callback function returns a truthy value for
  *  any array element; otherwise, `false`.
- * @example
- * var some = require('array-some-x');.
- *
- * function isBiggerThan10(element, index, array) {
- *   return element > 10;
- * }
- *
- * some([2, 5, 8, 1, 4], isBiggerThan10);  // false
- * some([12, 5, 8, 1, 4], isBiggerThan10); // true
  */
 export default $some;
