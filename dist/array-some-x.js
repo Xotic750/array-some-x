@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-26T14:49:53.850Z",
+  "date": "2019-07-27T09:08:10.260Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
   "hash": "2cf78fa9a037bd929cb0",
   "license": "MIT",
-  "version": "3.0.10"
+  "version": "3.0.11"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
