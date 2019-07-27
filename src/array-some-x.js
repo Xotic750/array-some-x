@@ -152,13 +152,8 @@ const implementation = function implementation() {
     assertIsFunction(callBack);
     const iterable = splitIfBoxedBug(object);
     const length = toLength(iterable.length);
-    let thisArg;
-
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      thisArg = arguments[2];
-    }
-
+    /* eslint-disable-next-line prefer-rest-params,no-void */
+    const thisArg = arguments.length > 2 ? arguments[2] : void 0;
     const noThis = typeof thisArg === 'undefined';
     for (let i = 0; i < length; i += 1) {
       if (i in iterable) {

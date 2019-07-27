@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-27T10:38:38.483Z",
+  "date": "2019-07-27T15:02:28.804Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
-  "hash": "9bf22a61124f5ca8aca3",
+  "hash": "aade659d7ffd7d4c5004",
   "license": "MIT",
-  "version": "3.0.11"
+  "version": "3.0.12"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1322,8 +1322,6 @@ var binaryRadix = 2;
 var octalRadix = 8;
 var testCharsCount = 2;
 var to_number_x_esm_ERROR_MESSAGE = 'Cannot convert a Symbol value to a number';
-/** @type {NumberConstructor} */
-
 var to_number_x_esm_castNumber = testCharsCount.constructor;
 var pStrSlice = to_number_x_esm_ERROR_MESSAGE.slice;
 var binaryRegex = /^0b[01]+$/i;
@@ -1724,13 +1722,9 @@ var array_some_x_esm_implementation = function implementation() {
     assert_is_function_x_esm(callBack);
     var iterable = split_if_boxed_bug_x_esm(object);
     var length = to_length_x_esm(iterable.length);
-    var thisArg;
+    /* eslint-disable-next-line prefer-rest-params,no-void */
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      thisArg = arguments[2];
-    }
-
+    var thisArg = arguments.length > 2 ? arguments[2] : void 0;
     var noThis = typeof thisArg === 'undefined';
 
     for (var i = 0; i < length; i += 1) {

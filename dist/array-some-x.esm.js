@@ -127,13 +127,9 @@ var implementation = function implementation() {
     assertIsFunction(callBack);
     var iterable = splitIfBoxedBug(object);
     var length = toLength(iterable.length);
-    var thisArg;
+    /* eslint-disable-next-line prefer-rest-params,no-void */
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      thisArg = arguments[2];
-    }
-
+    var thisArg = arguments.length > 2 ? arguments[2] : void 0;
     var noThis = typeof thisArg === 'undefined';
 
     for (var i = 0; i < length; i += 1) {
