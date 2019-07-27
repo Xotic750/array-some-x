@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-27T09:08:10.260Z",
+  "date": "2019-07-27T10:38:38.483Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
-  "hash": "2cf78fa9a037bd929cb0",
+  "hash": "9bf22a61124f5ca8aca3",
   "license": "MIT",
   "version": "3.0.11"
 }
@@ -1595,143 +1595,113 @@ var assert_is_function_x_esm_assertIsFunction = function assertIsFunction(callba
 
 
 // CONCATENATED MODULE: ./dist/array-some-x.esm.js
-var array_some_x_esm_this = undefined;
-
-function array_some_x_esm_newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
 
 
 
 
 
 
-/** @type {BooleanConstructor} */
-
-var array_some_x_esm_castBoolean = true.constructor;
-/** @type {ObjectConstructor} */
-
-var array_some_x_esm_castObject = {}.constructor;
 var ns = [].some;
 var nativeSome = typeof ns === 'function' && ns;
-var isWorking;
 
-if (nativeSome) {
+var array_some_x_esm_test1 = function test1() {
   var spy = 0;
-  var res = attempt_x_esm.call([1, 2], nativeSome, function (item) {
-    array_some_x_esm_newArrowCheck(this, array_some_x_esm_this);
-
+  var res = attempt_x_esm.call([1, 2], nativeSome, function spyAdd1(item) {
     spy += item;
     return false;
-  }.bind(undefined));
-  isWorking = res.threw === false && res.value === false && spy === 3;
+  });
+  return res.threw === false && res.value === false && spy === 3;
+};
 
-  if (isWorking) {
-    spy = '';
-    res = attempt_x_esm.call(array_some_x_esm_castObject('abc'), nativeSome, function (item, index) {
-      array_some_x_esm_newArrowCheck(this, array_some_x_esm_this);
+var array_some_x_esm_test2 = function test2() {
+  var spy = '';
+  var res = attempt_x_esm.call({}.constructor('abc'), nativeSome, function spyAdd2(item, index) {
+    spy += item;
+    return index === 1;
+  });
+  return res.threw === false && res.value === true && spy === 'ab';
+};
 
-      spy += item;
-      return index === 1;
-    }.bind(undefined));
-    isWorking = res.threw === false && res.value === true && spy === 'ab';
+var array_some_x_esm_test3 = function test3() {
+  var spy = 0;
+  var res = attempt_x_esm.call(function getArgs() {
+    /* eslint-disable-next-line prefer-rest-params */
+    return arguments;
+  }(1, 2, 3), nativeSome, function spyAdd3(item, index) {
+    spy += item;
+    return index === 2;
+  });
+  return res.threw === false && res.value === true && spy === 6;
+};
+
+var array_some_x_esm_test4 = function test4() {
+  var spy = 0;
+  var res = attempt_x_esm.call({
+    0: 1,
+    1: 2,
+    3: 3,
+    4: 4,
+    length: 4
+  }, nativeSome, function spyAdd4(item) {
+    spy += item;
+    return false;
+  });
+  return res.threw === false && res.value === false && spy === 6;
+};
+
+var array_some_x_esm_test5 = function test5() {
+  var doc = typeof document !== 'undefined' && document;
+
+  if (doc) {
+    var spy = null;
+    var fragment = doc.createDocumentFragment();
+    var div = doc.createElement('div');
+    fragment.appendChild(div);
+    var res = attempt_x_esm.call(fragment.childNodes, nativeSome, function spyAssign(item) {
+      spy = item;
+      return item;
+    });
+    return res.threw === false && res.value === true && spy === div;
   }
 
-  if (isWorking) {
-    spy = 0;
-    res = attempt_x_esm.call(function getArgs() {
-      /* eslint-disable-next-line prefer-rest-params */
-      return arguments;
-    }(1, 2, 3), nativeSome, function (item, index) {
-      array_some_x_esm_newArrowCheck(this, array_some_x_esm_this);
+  return true;
+};
 
-      spy += item;
-      return index === 2;
-    }.bind(undefined));
-    isWorking = res.threw === false && res.value === true && spy === 6;
-  }
+var array_some_x_esm_test6 = function test6() {
+  var isStrict = function getIsStrict() {
+    /* eslint-disable-next-line babel/no-invalid-this */
+    return true.constructor(this) === false;
+  }();
 
-  if (isWorking) {
-    spy = 0;
-    res = attempt_x_esm.call({
-      0: 1,
-      1: 2,
-      3: 3,
-      4: 4,
-      length: 4
-    }, nativeSome, function (item) {
-      array_some_x_esm_newArrowCheck(this, array_some_x_esm_this);
-
-      spy += item;
-      return false;
-    }.bind(undefined));
-    isWorking = res.threw === false && res.value === false && spy === 6;
-  }
-
-  if (isWorking) {
-    var doc = typeof document !== 'undefined' && document;
-
-    if (doc) {
-      spy = null;
-      var fragment = doc.createDocumentFragment();
-      var div = doc.createElement('div');
-      fragment.appendChild(div);
-      res = attempt_x_esm.call(fragment.childNodes, nativeSome, function (item) {
-        array_some_x_esm_newArrowCheck(this, array_some_x_esm_this);
-
-        spy = item;
-        return item;
-      }.bind(undefined));
-      isWorking = res.threw === false && res.value === true && spy === div;
-    }
-  }
-
-  if (isWorking) {
-    var isStrict = function getIsStrict() {
+  if (isStrict) {
+    var spy = null;
+    var res = attempt_x_esm.call([1], nativeSome, function thisTest() {
       /* eslint-disable-next-line babel/no-invalid-this */
-      return array_some_x_esm_castBoolean(this) === false;
-    }();
-
-    if (isStrict) {
-      spy = null;
-      res = attempt_x_esm.call([1], nativeSome, function () {
-        array_some_x_esm_newArrowCheck(this, array_some_x_esm_this);
-
-        /* eslint-disable-next-line babel/no-invalid-this */
-        spy = typeof this === 'string';
-      }.bind(undefined), 'x');
-      isWorking = res.threw === false && res.value === false && spy === true;
-    }
+      spy = typeof this === 'string';
+    }, 'x');
+    return res.threw === false && res.value === false && spy === true;
   }
 
-  if (isWorking) {
-    spy = {};
-    var fn = ['return nativeSome.call("foo", function (_, __, context) {', 'if (Boolean(context) === false || typeof context !== "object") {', 'spy.value = true;}});'].join('');
-    /* eslint-disable-next-line no-new-func */
+  return true;
+};
 
-    res = attempt_x_esm(Function('nativeSome', 'spy', fn), nativeSome, spy);
-    isWorking = res.threw === false && res.value === false && spy.value !== true;
-  }
-}
-/**
- * This method tests whether some element in the array passes the test
- * implemented by the provided function.
- *
- * @param {Array} array - The array to iterate over.
- * @param {Function} callBack - Function to test for each element.
- * @param {*} [thisArg] - Value to use as this when executing callback.
- * @throws {TypeError} If array is null or undefined.
- * @throws {TypeError} If callBack is not a function.
- * @returns {boolean} `true` if the callback function returns a truthy value for
- *  any array element; otherwise, `false`.
- */
+var array_some_x_esm_test7 = function test7() {
+  var spy = {};
+  var fn = 'return nativeSome.call("foo", function (_, __, context) {' + 'if (castBoolean(context) === false || typeof context !== "object") {' + 'spy.value = true;}});';
+  /* eslint-disable-next-line no-new-func */
 
+  var res = attempt_x_esm(Function('nativeSome', 'spy', 'castBoolean', fn), nativeSome, spy, true.constructor);
+  return res.threw === false && res.value === false && spy.value !== true;
+};
 
-var $some;
+var isWorking = true.constructor(nativeSome) && array_some_x_esm_test1() && array_some_x_esm_test2() && array_some_x_esm_test3() && array_some_x_esm_test4() && array_some_x_esm_test5() && array_some_x_esm_test6() && array_some_x_esm_test7();
 
-if (nativeSome) {
-  $some = function some(array, callBack
+var array_some_x_esm_patchedSome = function patchedSome() {
+  return function some(array, callBack
   /* , thisArg */
   ) {
-    var args = [callBack];
+    require_object_coercible_x_esm(array);
+    var args = [assert_is_function_x_esm(callBack)];
 
     if (arguments.length > 2) {
       /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
@@ -1740,11 +1710,13 @@ if (nativeSome) {
 
     return nativeSome.apply(array, args);
   };
-} else {
-  // ES5 15.4.4.17
-  // http://es5.github.com/#x15.4.4.17
-  // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
-  $some = function some(array, callBack
+}; // ES5 15.4.4.17
+// http://es5.github.com/#x15.4.4.17
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
+
+
+var array_some_x_esm_implementation = function implementation() {
+  return function some(array, callBack
   /* , thisArg */
   ) {
     var object = to_object_x_esm(array); // If no callback function or if callback is not a callable function
@@ -1773,10 +1745,23 @@ if (nativeSome) {
 
     return false;
   };
-}
+};
+/**
+ * This method tests whether some element in the array passes the test
+ * implemented by the provided function.
+ *
+ * @param {Array} array - The array to iterate over.
+ * @param {Function} callBack - Function to test for each element.
+ * @param {*} [thisArg] - Value to use as this when executing callback.
+ * @throws {TypeError} If array is null or undefined.
+ * @throws {TypeError} If callBack is not a function.
+ * @returns {boolean} `true` if the callback function returns a truthy value for
+ *  any array element; otherwise, `false`.
+ */
 
-var s = $some;
-/* harmony default export */ var array_some_x_esm = __webpack_exports__["default"] = (s);
+
+var $some = isWorking ? array_some_x_esm_patchedSome() : array_some_x_esm_implementation();
+/* harmony default export */ var array_some_x_esm = __webpack_exports__["default"] = ($some);
 
 
 
