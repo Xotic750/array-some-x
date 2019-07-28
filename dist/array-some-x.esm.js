@@ -118,7 +118,7 @@ var patchedSome = function patchedSome() {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
 
 
-var implementation = function implementation() {
+export var implementation = function implementation() {
   return function some(array, callBack
   /* , thisArg */
   ) {
@@ -157,7 +157,6 @@ var implementation = function implementation() {
  * @returns {boolean} `true` if the callback function returns a truthy value for
  *  any array element; otherwise, `false`.
  */
-
 
 var $some = isWorking ? patchedSome() : implementation();
 export default $some;

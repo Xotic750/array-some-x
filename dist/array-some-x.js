@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-27T22:01:04.301Z",
+  "date": "2019-07-28T14:11:02.548Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
-  "hash": "aade659d7ffd7d4c5004",
+  "hash": "b5e4e9bdc17fc3c7e3cb",
   "license": "MIT",
   "version": "3.0.12"
 }
@@ -1593,6 +1593,7 @@ var assert_is_function_x_esm_assertIsFunction = function assertIsFunction(callba
 
 
 // CONCATENATED MODULE: ./dist/array-some-x.esm.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "implementation", function() { return array_some_x_esm_implementation; });
 
 
 
@@ -1752,7 +1753,6 @@ var array_some_x_esm_implementation = function implementation() {
  * @returns {boolean} `true` if the callback function returns a truthy value for
  *  any array element; otherwise, `false`.
  */
-
 
 var $some = isWorking ? array_some_x_esm_patchedSome() : array_some_x_esm_implementation();
 /* harmony default export */ var array_some_x_esm = __webpack_exports__["default"] = ($some);

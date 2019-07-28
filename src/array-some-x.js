@@ -145,7 +145,7 @@ const patchedSome = function patchedSome() {
 // ES5 15.4.4.17
 // http://es5.github.com/#x15.4.4.17
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
-const implementation = function implementation() {
+export const implementation = function implementation() {
   return function some(array, callBack /* , thisArg */) {
     const object = toObject(array);
     // If no callback function or if callback is not a callable function
