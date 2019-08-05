@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-08-05T17:30:50.269Z",
+  "date": "2019-08-05T18:52:36.836Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
-  "hash": "ae2aba09860ce7707a00",
+  "hash": "081e9e9c7af4da654961",
   "license": "MIT",
-  "version": "3.0.13"
+  "version": "3.0.14"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1665,6 +1665,7 @@ var array_any_x_esm_getIterableLengthPair = function getIterableLengthPair(objec
  * This method tests whether some element in the array passes the test
  * implemented by the provided function.
  *
+ * @function any
  * @param {Array} array - The array to iterate over.
  * @param {Function} callBack - Function to test for each element.
  * @param {*} [thisArg] - Value to use as this when executing callback.
