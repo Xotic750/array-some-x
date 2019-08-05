@@ -78,10 +78,13 @@ var test6 = function test6() {
 
   if (isStrict) {
     var spy = null;
-    var res = attempt.call([1], nativeSome, function thisTest() {
+
+    var thisTest = function thisTest() {
       /* eslint-disable-next-line babel/no-invalid-this */
       spy = typeof this === 'string';
-    }, 'x');
+    };
+
+    var res = attempt.call([1], nativeSome, thisTest, 'x');
     return res.threw === false && res.value === false && spy === true;
   }
 
@@ -99,51 +102,47 @@ var test7 = function test7() {
 
 var isWorking = true.constructor(nativeSome) && test1() && test2() && test3() && test4() && test5() && test6() && test7();
 
-var patchedSome = function patchedSome() {
-  return function some(array, callBack
-  /* , thisArg */
-  ) {
-    requireObjectCoercible(array);
-    var args = [assertIsFunction(callBack)];
+var patchedSome = function some(array, callBack
+/* , thisArg */
+) {
+  requireObjectCoercible(array);
+  var args = [assertIsFunction(callBack)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    }
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  }
 
-    return nativeSome.apply(array, args);
-  };
+  return nativeSome.apply(array, args);
 }; // ES5 15.4.4.17
 // http://es5.github.com/#x15.4.4.17
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
 
 
-export var implementation = function implementation() {
-  return function some(array, callBack
-  /* , thisArg */
-  ) {
-    var object = toObject(array); // If no callback function or if callback is not a callable function
+export var implementation = function some(array, callBack
+/* , thisArg */
+) {
+  var object = toObject(array); // If no callback function or if callback is not a callable function
 
-    assertIsFunction(callBack);
-    var iterable = splitIfBoxedBug(object);
-    var length = toLength(iterable.length);
-    /* eslint-disable-next-line prefer-rest-params,no-void */
+  assertIsFunction(callBack);
+  var iterable = splitIfBoxedBug(object);
+  var length = toLength(iterable.length);
+  /* eslint-disable-next-line prefer-rest-params,no-void */
 
-    var thisArg = arguments.length > 2 ? arguments[2] : void 0;
-    var noThis = typeof thisArg === 'undefined';
+  var thisArg = arguments.length > 2 ? arguments[2] : void 0;
+  var noThis = typeof thisArg === 'undefined';
 
-    for (var i = 0; i < length; i += 1) {
-      if (i in iterable) {
-        var item = iterable[i];
+  for (var i = 0; i < length; i += 1) {
+    if (i in iterable) {
+      var item = iterable[i];
 
-        if (noThis ? callBack(item, i, object) : callBack.call(thisArg, item, i, object)) {
-          return true;
-        }
+      if (noThis ? callBack(item, i, object) : callBack.call(thisArg, item, i, object)) {
+        return true;
       }
     }
+  }
 
-    return false;
-  };
+  return false;
 };
 /**
  * This method tests whether some element in the array passes the test
@@ -158,7 +157,7 @@ export var implementation = function implementation() {
  *  any array element; otherwise, `false`.
  */
 
-var $some = isWorking ? patchedSome() : implementation();
+var $some = isWorking ? patchedSome : implementation;
 export default $some;
 
 //# sourceMappingURL=array-some-x.esm.js.map

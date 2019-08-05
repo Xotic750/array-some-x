@@ -50,21 +50,11 @@ const test3 = function test3() {
 
 const test4 = function test4() {
   let spy = 0;
-  const res = attempt.call(
-    {
-      0: 1,
-      1: 2,
-      3: 3,
-      4: 4,
-      length: 4,
-    },
-    nativeSome,
-    function spyAdd4(item) {
-      spy += item;
+  const res = attempt.call({0: 1, 1: 2, 3: 3, 4: 4, length: 4}, nativeSome, function spyAdd4(item) {
+    spy += item;
 
-      return false;
-    },
-  );
+    return false;
+  });
 
   return res.threw === false && res.value === false && spy === 6;
 };
@@ -97,15 +87,13 @@ const test6 = function test6() {
 
   if (isStrict) {
     let spy = null;
-    const res = attempt.call(
-      [1],
-      nativeSome,
-      function thisTest() {
-        /* eslint-disable-next-line babel/no-invalid-this */
-        spy = typeof this === 'string';
-      },
-      'x',
-    );
+
+    const thisTest = function thisTest() {
+      /* eslint-disable-next-line babel/no-invalid-this */
+      spy = typeof this === 'string';
+    };
+
+    const res = attempt.call([1], nativeSome, thisTest, 'x');
 
     return res.threw === false && res.value === false && spy === true;
   }
@@ -128,45 +116,41 @@ const test7 = function test7() {
 
 const isWorking = true.constructor(nativeSome) && test1() && test2() && test3() && test4() && test5() && test6() && test7();
 
-const patchedSome = function patchedSome() {
-  return function some(array, callBack /* , thisArg */) {
-    requireObjectCoercible(array);
-    const args = [assertIsFunction(callBack)];
+const patchedSome = function some(array, callBack /* , thisArg */) {
+  requireObjectCoercible(array);
+  const args = [assertIsFunction(callBack)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    }
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  }
 
-    return nativeSome.apply(array, args);
-  };
+  return nativeSome.apply(array, args);
 };
 
 // ES5 15.4.4.17
 // http://es5.github.com/#x15.4.4.17
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
-export const implementation = function implementation() {
-  return function some(array, callBack /* , thisArg */) {
-    const object = toObject(array);
-    // If no callback function or if callback is not a callable function
-    assertIsFunction(callBack);
-    const iterable = splitIfBoxedBug(object);
-    const length = toLength(iterable.length);
-    /* eslint-disable-next-line prefer-rest-params,no-void */
-    const thisArg = arguments.length > 2 ? arguments[2] : void 0;
-    const noThis = typeof thisArg === 'undefined';
-    for (let i = 0; i < length; i += 1) {
-      if (i in iterable) {
-        const item = iterable[i];
+export const implementation = function some(array, callBack /* , thisArg */) {
+  const object = toObject(array);
+  // If no callback function or if callback is not a callable function
+  assertIsFunction(callBack);
+  const iterable = splitIfBoxedBug(object);
+  const length = toLength(iterable.length);
+  /* eslint-disable-next-line prefer-rest-params,no-void */
+  const thisArg = arguments.length > 2 ? arguments[2] : void 0;
+  const noThis = typeof thisArg === 'undefined';
+  for (let i = 0; i < length; i += 1) {
+    if (i in iterable) {
+      const item = iterable[i];
 
-        if (noThis ? callBack(item, i, object) : callBack.call(thisArg, item, i, object)) {
-          return true;
-        }
+      if (noThis ? callBack(item, i, object) : callBack.call(thisArg, item, i, object)) {
+        return true;
       }
     }
+  }
 
-    return false;
-  };
+  return false;
 };
 
 /**
@@ -181,6 +165,6 @@ export const implementation = function implementation() {
  * @returns {boolean} `true` if the callback function returns a truthy value for
  *  any array element; otherwise, `false`.
  */
-const $some = isWorking ? patchedSome() : implementation();
+const $some = isWorking ? patchedSome : implementation;
 
 export default $some;
