@@ -2,7 +2,7 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-08-13T11:53:25.265Z",
+  "date": "2019-08-13T15:34:44.527Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
