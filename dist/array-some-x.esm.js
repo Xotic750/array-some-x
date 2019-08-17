@@ -4,65 +4,79 @@ import assertIsFunction from 'assert-is-function-x';
 import requireObjectCoercible from 'require-object-coercible-x';
 import any from 'array-any-x';
 import toBoolean from 'to-boolean-x';
+import methodize from 'simple-methodize-x';
+import call from 'simple-call-x';
 var ns = [].some;
-var nativeSome = typeof ns === 'function' && ns;
+var nativeSome = typeof ns === 'function' && methodize(ns);
 
 var test1 = function test1() {
   var spy = 0;
-  var res = attempt.call([1, 2], nativeSome, function spyAdd1(item) {
-    spy += item;
-    return false;
+  var res = attempt(function attemptee() {
+    return nativeSome([1, 2], function spyAdd1(item) {
+      spy += item;
+      return false;
+    });
   });
   return res.threw === false && res.value === false && spy === 3;
 };
 
 var test2 = function test2() {
   var spy = '';
-  var res = attempt.call(toObject('abc'), nativeSome, function spyAdd2(item, index) {
-    spy += item;
-    return index === 1;
+  var res = attempt(function attemptee() {
+    return nativeSome(toObject('abc'), function spyAdd2(item, index) {
+      spy += item;
+      return index === 1;
+    });
   });
   return res.threw === false && res.value === true && spy === 'ab';
 };
 
 var test3 = function test3() {
   var spy = 0;
-  var res = attempt.call(function getArgs() {
-    /* eslint-disable-next-line prefer-rest-params */
-    return arguments;
-  }(1, 2, 3), nativeSome, function spyAdd3(item, index) {
-    spy += item;
-    return index === 2;
+  var res = attempt(function attemptee() {
+    var args = function getArgs() {
+      /* eslint-disable-next-line prefer-rest-params */
+      return arguments;
+    }(1, 2, 3);
+
+    return nativeSome(args, function spyAdd3(item, index) {
+      spy += item;
+      return index === 2;
+    });
   });
   return res.threw === false && res.value === true && spy === 6;
 };
 
 var test4 = function test4() {
   var spy = 0;
-  var res = attempt.call({
-    0: 1,
-    1: 2,
-    3: 3,
-    4: 4,
-    length: 4
-  }, nativeSome, function spyAdd4(item) {
-    spy += item;
-    return false;
+  var res = attempt(function attemptee() {
+    return nativeSome({
+      0: 1,
+      1: 2,
+      3: 3,
+      4: 4,
+      length: 4
+    }, function spyAdd4(item) {
+      spy += item;
+      return false;
+    });
   });
   return res.threw === false && res.value === false && spy === 6;
 };
 
-var test5 = function test5() {
-  var doc = typeof document !== 'undefined' && document;
+var doc = typeof document !== 'undefined' && document;
 
+var test5 = function test5() {
   if (doc) {
     var spy = null;
     var fragment = doc.createDocumentFragment();
     var div = doc.createElement('div');
     fragment.appendChild(div);
-    var res = attempt.call(fragment.childNodes, nativeSome, function spyAssign(item) {
-      spy = item;
-      return item;
+    var res = attempt(function attemptee() {
+      return nativeSome(fragment.childNodes, function spyAssign(item) {
+        spy = item;
+        return item;
+      });
     });
     return res.threw === false && res.value === true && spy === div;
   }
@@ -70,12 +84,12 @@ var test5 = function test5() {
   return true;
 };
 
-var test6 = function test6() {
-  var isStrict = function getIsStrict() {
-    /* eslint-disable-next-line babel/no-invalid-this */
-    return toBoolean(this) === false;
-  }();
+var isStrict = function getIsStrict() {
+  /* eslint-disable-next-line babel/no-invalid-this */
+  return toBoolean(this) === false;
+}();
 
+var test6 = function test6() {
   if (isStrict) {
     var spy = null;
 
@@ -84,7 +98,9 @@ var test6 = function test6() {
       spy = typeof this === 'string';
     };
 
-    var res = attempt.call([1], nativeSome, thisTest, 'x');
+    var res = attempt(function attemptee() {
+      return nativeSome([1], thisTest, 'x');
+    });
     return res.threw === false && res.value === false && spy === true;
   }
 
@@ -93,27 +109,22 @@ var test6 = function test6() {
 
 var test7 = function test7() {
   var spy = {};
-  var fn = 'return nativeSome.call("foo", function (_, __, context) {' + 'if (castBoolean(context) === false || typeof context !== "object") {' + 'spy.value = true;}});';
-  /* eslint-disable-next-line no-new-func */
-
-  var res = attempt(Function('nativeSome', 'spy', 'castBoolean', fn), nativeSome, spy, toBoolean);
+  var fn = 'return nativeSome("foo", function (_, __, context) {' + 'if (castBoolean(context) === false || typeof context !== "object") {' + 'spy.value = true;}});';
+  var res = attempt(function attemptee() {
+    /* eslint-disable-next-line no-new-func */
+    return Function('nativeSome', 'spy', 'castBoolean', fn)(nativeSome, spy, toBoolean);
+  });
   return res.threw === false && res.value === false && spy.value !== true;
 };
 
 var isWorking = toBoolean(nativeSome) && test1() && test2() && test3() && test4() && test5() && test6() && test7();
+console.log(isWorking);
 
 var patchedSome = function some(array, callBack
 /* , thisArg */
 ) {
-  requireObjectCoercible(array);
-  var args = [assertIsFunction(callBack)];
-
-  if (arguments.length > 2) {
-    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-    args[1] = arguments[2];
-  }
-
-  return nativeSome.apply(array, args);
+  /* eslint-disable-next-line prefer-rest-params */
+  return nativeSome(requireObjectCoercible(array), assertIsFunction(callBack), arguments[2]);
 }; // ES5 15.4.4.17
 // http://es5.github.com/#x15.4.4.17
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
@@ -133,7 +144,7 @@ export var implementation = function some(array, callBack
 
     if (i in arguments[2]) {
       /* eslint-disable-next-line prefer-rest-params,babel/no-invalid-this */
-      if (callBack.call(this, arguments[0], i, object)) {
+      if (call(callBack, this, [arguments[0], i, object])) {
         return true;
       }
     }
