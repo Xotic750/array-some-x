@@ -130,8 +130,6 @@ const test7 = function test7() {
 
 const isWorking = toBoolean(nativeSome) && test1() && test2() && test3() && test4() && test5() && test6() && test7();
 
-console.log(isWorking);
-
 const patchedSome = function some(array, callBack /* , thisArg */) {
   /* eslint-disable-next-line prefer-rest-params */
   return nativeSome(requireObjectCoercible(array), assertIsFunction(callBack), arguments[2]);

@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-09-05T20:12:34.974Z",
+  "date": "2020-01-31T00:07:24.056Z",
   "describe": "",
   "description": "Tests whether some element passes the provided function.",
   "file": "array-some-x.js",
-  "hash": "7b640bd79ec4f5cecac8",
+  "hash": "35922eec081847ed713f",
   "license": "MIT",
   "version": "3.1.2"
 }
@@ -2191,7 +2191,6 @@ var array_some_x_esm_test7 = function test7() {
 };
 
 var array_some_x_esm_isWorking = to_boolean_x_esm(nativeSome) && array_some_x_esm_test1() && array_some_x_esm_test2() && array_some_x_esm_test3() && array_some_x_esm_test4() && array_some_x_esm_test5() && array_some_x_esm_test6() && array_some_x_esm_test7();
-console.log(array_some_x_esm_isWorking);
 
 var patchedSome = function some(array, callBack
 /* , thisArg */

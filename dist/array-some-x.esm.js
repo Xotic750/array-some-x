@@ -118,7 +118,6 @@ var test7 = function test7() {
 };
 
 var isWorking = toBoolean(nativeSome) && test1() && test2() && test3() && test4() && test5() && test6() && test7();
-console.log(isWorking);
 
 var patchedSome = function some(array, callBack
 /* , thisArg */
